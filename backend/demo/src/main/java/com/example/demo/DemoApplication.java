@@ -1,16 +1,14 @@
 package com.example.demo;
 
-import com.example.demo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 @SpringBootApplication
 public class DemoApplication implements CommandLineRunner {
-
-    @Autowired
-    private UserService userService;
 
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
@@ -18,17 +16,19 @@ public class DemoApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("✅ Spring Boot application started successfully!");
-        System.out.println("✅ Server running on port");
+        // 数据库连接配置
+        String url = "jdbc:mysql://localhost:3306/library_db?useSSL=false&serverTimezone=UTC";
+        String username = "library_user";   // 替换为你的用户名
+        String password = "libpass123";     // 替换为你的密码
 
-        // 延迟初始化，避免启动时的数据库连接问题
-        Thread.sleep(2000);
-
-        try {
-            userService.initDefaultUser();
-            System.out.println("✅ Default user initialization completed! (admin/111111)");
+        try (Connection conn = DriverManager.getConnection(url, username, password)) {
+            if (conn != null && !conn.isClosed()) {
+                System.out.println("✅ 数据库连接成功！");
+            } else {
+                System.out.println("❌ 数据库连接失败！");
+            }
         } catch (Exception e) {
-            System.err.println("⚠️ Default user initialization failed, but server is running: " + e.getMessage());
+            System.out.println("❌ 数据库连接失败: " + e.getMessage());
         }
     }
 }

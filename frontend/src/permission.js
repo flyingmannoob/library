@@ -8,7 +8,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/register'] // no redirect whitelist
+const whiteList = ['/login'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -26,39 +26,16 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      // determine whether the user has obtained his permission roles through getInfo
-      const hasRoles = store.getters.roles && store.getters.roles.length > 0
-      if (hasRoles) {
+      const hasGetUserInfo = store.getters.name
+      if (hasGetUserInfo) {
         next()
       } else {
         try {
           // get user info
-          // note: roles must be a object array! such as: ['admin'] or ['developer','editor']
-          const { roles } = await store.dispatch('user/getInfo')
+          await store.dispatch('user/getInfo')
 
-          console.log('获取到的用户角色:', roles)
-
-          // generate accessible routes map based on roles
-          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-
-          console.log('生成的访问路由:', accessRoutes)
-
-          // dynamically add accessible routes - 使用兼容性更好的方式
-          if (router.addRoutes) {
-            // 旧版本的Vue Router
-            router.addRoutes(accessRoutes)
-          } else {
-            // 新版本的Vue Router
-            accessRoutes.forEach(route => {
-              router.addRoute(route)
-            })
-          }
-
-          // hack method to ensure that addRoutes is complete
-          // set the replace: true, so the navigation will not leave a history record
-          next({ ...to, replace: true })
+          next()
         } catch (error) {
-          console.error('权限获取失败:', error)
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
