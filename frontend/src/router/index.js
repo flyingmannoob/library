@@ -160,6 +160,20 @@ export const constantRoutes = [
     ]
   },
 
+  // 图书推荐聊天页面
+  {
+    path: '/book-recommendation',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'BookRecommendation',
+        component: () => import('@/views/book-recommendation/index'),
+        meta: { title: '图书推荐', icon: 'eye-open' }
+      }
+    ]
+  },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

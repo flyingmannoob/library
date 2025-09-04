@@ -17,7 +17,7 @@ public class DemoApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // 数据库连接配置
-        String url = "jdbc:mysql://localhost:3306/library_db?useSSL=false&serverTimezone=UTC";
+        String url = "jdbc:mysql://localhost:3306/library_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
         String username = "library_user";   // 替换为你的用户名
         String password = "libpass123";     // 替换为你的密码
 
