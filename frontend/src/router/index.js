@@ -38,6 +38,12 @@ export const constantRoutes = [
   },
 
   {
+    path: '/register',
+    component: () => import('@/views/register/index'),
+    hidden: true
+  },
+
+  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
@@ -55,6 +61,64 @@ export const constantRoutes = [
     }]
   },
 
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
+]
+
+/**
+ * asyncRoutes
+ * the routes that need to be dynamically loaded based on user roles
+ */
+export const asyncRoutes = [
+  // 图书管理模块 - 仅管理员可见
+  {
+    path: '/books',
+    component: Layout,
+    redirect: '/books/list',
+    name: 'Books',
+    meta: {
+      title: '图书管理',
+      icon: 'el-icon-reading',
+      roles: ['admin'] // 只有管理员可以访问
+    },
+    children: [
+      {
+        path: 'list',
+        name: 'BookList',
+        component: () => import('@/views/books/list'),
+        meta: { title: '图书列表', icon: 'table' }
+      },
+      {
+        path: 'create',
+        name: 'CreateBook',
+        component: () => import('@/views/books/create'),
+        meta: { title: '添加图书', icon: 'edit' }
+      }
+    ]
+  },
+
+  // 用户管理模块 - 仅管理员可见
+  {
+    path: '/users',
+    component: Layout,
+    redirect: '/users/list',
+    name: 'Users',
+    meta: {
+      title: '用户管理',
+      icon: 'user',
+      roles: ['admin'] // 只有管理员可以访问
+    },
+    children: [
+      {
+        path: 'list',
+        name: 'UserList',
+        component: () => import('@/views/users/list'),
+        meta: { title: '用户列表', icon: 'table' }
+      }
+    ]
+  },
+
+  // 示例页面 - 所有用户可见（移除roles限制）
   {
     path: '/example',
     component: Layout,
@@ -77,6 +141,7 @@ export const constantRoutes = [
     ]
   },
 
+  // 表单页面 - 所有用户可见
   {
     path: '/form',
     component: Layout,
@@ -90,6 +155,7 @@ export const constantRoutes = [
     ]
   },
 
+  // 嵌套路由示例 - 所有用户可见
   {
     path: '/nested',
     component: Layout,
@@ -102,7 +168,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
+        component: () => import('@/views/nested/menu1/index'),
         name: 'Menu1',
         meta: { title: 'Menu1' },
         children: [
@@ -149,6 +215,7 @@ export const constantRoutes = [
     ]
   },
 
+  // 外部链接 - 所有用户可见
   {
     path: 'external-link',
     component: Layout,
@@ -158,10 +225,7 @@ export const constantRoutes = [
         meta: { title: 'External Link', icon: 'link' }
       }
     ]
-  },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 
 const createRouter = () => new Router({

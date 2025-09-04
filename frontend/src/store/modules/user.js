@@ -6,7 +6,8 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    roles: []
   }
 }
 
@@ -24,6 +25,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles
   }
 }
 
@@ -53,12 +57,28 @@ const actions = {
           return reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar } = data
+        // 确保角色数据格式正确
+        let { name, avatar, roles } = data
+
+        // 如果roles不存在或为空，设置默认角色
+        if (!roles || (Array.isArray(roles) && roles.length === 0)) {
+          roles = ['user']
+          console.warn('未获取到用户角色，设置为默认用户角色')
+        }
+
+        // 确保roles是数组格式
+        if (!Array.isArray(roles)) {
+          roles = [roles]
+        }
+
+        console.log('用户信息 - 姓名:', name, '角色:', roles)
 
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
+        commit('SET_ROLES', roles)
         resolve(data)
       }).catch(error => {
+        console.error('获取用户信息失败:', error)
         reject(error)
       })
     })
@@ -94,4 +114,3 @@ export default {
   mutations,
   actions
 }
-

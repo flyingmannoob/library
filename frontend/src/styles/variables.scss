@@ -1,15 +1,15 @@
-// sidebar
-$menuText:#bfcbd9;
-$menuActiveText:#409EFF;
-$subMenuActiveText:#f4f4f5; //https://github.com/ElemeFE/element/issues/12951
+// sidebar - 统一的现代紫色配色方案
+$menuText: rgba(255, 255, 255, 0.85);
+$menuActiveText: #ffffff;
+$subMenuActiveText: #ffffff;
 
-$menuBg:#304156;
-$menuHover:#263445;
+$menuBg: transparent;
+$menuHover: rgba(255, 255, 255, 0.12);
 
-$subMenuBg:#1f2d3d;
-$subMenuHover:#001528;
+$subMenuBg: rgba(0, 0, 0, 0.1);
+$subMenuHover: rgba(255, 255, 255, 0.08);
 
-$sideBarWidth: 210px;
+$sideBarWidth: 220px;
 
 // the :export directive is the magic sauce for webpack
 // https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
