@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS books (
     description TEXT,
     category_id BIGINT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    rating decimal(5,2),
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );
 
