@@ -72,8 +72,22 @@ INSERT INTO roles (role_name) VALUES ('ADMIN'), ('USER')
 INSERT INTO categories (name) VALUES ('Fiction'), ('Non-fiction'), ('Science'), ('History'), ('Technology')
     ON DUPLICATE KEY UPDATE name=VALUES(name);
 
--- 注意：用户数据将由应用程序初始化，以确保密码正确加密
--- 默认用户：admin/111111 将在应用启动时自动创建
+-- 初始化用户（密码后续 Spring Security 会加密）
+INSERT INTO users (username, password, email) VALUES
+    ('admin', 'admin123', 'admin@example.com'),
+    ('alice', 'alice123', 'alice@example.com');
+
+-- 给 admin 分配 ADMIN 角色
+INSERT INTO user_roles (user_id, role_id)
+SELECT u.id, r.id FROM users u, roles r
+WHERE u.username='admin' AND r.role_name='ADMIN'
+ON DUPLICATE KEY UPDATE user_id=user_id;
+
+-- 给 alice 分配 USER 角色
+INSERT INTO user_roles (user_id, role_id)
+SELECT u.id, r.id FROM users u, roles r
+WHERE u.username='alice' AND r.role_name='USER'
+ON DUPLICATE KEY UPDATE user_id=user_id;
 
 -- 示例图书
 -- Fiction (id = 1)

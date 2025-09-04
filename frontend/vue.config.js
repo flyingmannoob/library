@@ -29,6 +29,8 @@ module.exports = {
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
+  
+  // 修改这里的配置让请求到后端
   devServer: {
     port: port,
     open: true,
@@ -36,13 +38,12 @@ module.exports = {
       warnings: false,
       errors: true
     },
+    before: require('./mock/mock-server.js'),
     proxy: {
-      '/vue-admin-template': {
-        target: 'http://localhost:8080', // 修正为正确的后端端口8080
+      '/api': {
+        target: 'http://localhost:8081',
         changeOrigin: true,
-        pathRewrite: {
-          '^/vue-admin-template': '/vue-admin-template'
-        }
+        pathRewrite: { '^/api': '' }
       }
     }
   },

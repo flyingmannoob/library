@@ -2,12 +2,7 @@
   <div>
     <h2>Books</h2>
     <ul>
-      <li
-        v-for="(book, index) in books"
-        :key="index"
-      >
-        {{ book }}
-      </li>
+      <li v-for="book in books" :key="book">{{ book }}</li>
     </ul>
   </div>
 </template>
@@ -30,3 +25,4 @@ export default {
   }
 }
 </script>
+
