@@ -54,6 +54,13 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
+  {
+    path: '/book/detail/:id',  
+    name: 'BookDetail',
+    component: () => import('@/views/BookDetail'),
+    meta: { title: '图书详情', activeMenu: '/dashboard' },
+    props: true
+  },
 
   {
     path: '/example',

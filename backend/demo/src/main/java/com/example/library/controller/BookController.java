@@ -74,6 +74,59 @@ public class BookController {
         long count = bookService.countAllBooks();
         return ResponseEntity.ok(count);
     }
+    // 新增：点赞接口
+    @PostMapping("/{id}/like")
+    public ResponseEntity<?> likeBook(@PathVariable Long id) {
+        boolean success = bookService.likeBook(id);
+        if (success) {
+            Optional<Book> updatedBook = bookService.findBookById(id);
+            return updatedBook.map(book -> ResponseEntity.ok(new BookDTO(book)))
+                    .orElse(ResponseEntity.notFound().build());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
+    // 新增：取消点赞接口
+    @PostMapping("/{id}/unlike")
+    public ResponseEntity<?> unlikeBook(@PathVariable Long id) {
+        boolean success = bookService.unlikeBook(id);
+        if (success) {
+            Optional<Book> updatedBook = bookService.findBookById(id);
+            return updatedBook.map(book -> ResponseEntity.ok(new BookDTO(book)))
+                    .orElse(ResponseEntity.notFound().build());
+        } else {
+            return ResponseEntity.badRequest().body("无法取消点赞，点赞数可能已经为0");
+        }
+    }
+
+    // 新增：获取热门图书列表
+    @GetMapping("/popular")
+    public ResponseEntity<List<BookDTO>> getPopularBooks() {
+        List<Book> books = bookService.getPopularBooks();
+        List<BookDTO> bookDTOs = books.stream()
+                .map(BookDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(bookDTOs);
+    }
+
+    // 新增：获取前N本热门图书
+    @GetMapping("/popular/top")
+    public ResponseEntity<List<BookDTO>> getTopPopularBooks(
+            @RequestParam(defaultValue = "10") int limit) {
+        List<Book> books = bookService.getTopPopularBooks(limit);
+        List<BookDTO> bookDTOs = books.stream()
+                .map(BookDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(bookDTOs);
+    }
+
+    // 新增：获取图书点赞数
+    @GetMapping("/{id}/likes")
+    public ResponseEntity<Integer> getBookLikes(@PathVariable Long id) {
+        Optional<Book> book = bookService.findBookById(id);
+        return book.map(b -> ResponseEntity.ok(b.getLikes()))
+                .orElse(ResponseEntity.notFound().build());
+    }
 
 }

@@ -12,4 +12,9 @@ public interface BookService {
     Book saveBook(Book book);
     void deleteBookById(Long id);
     long countAllBooks();
+    // 新增：点赞相关方法
+    boolean likeBook(Long id);
+    boolean unlikeBook(Long id);
+    List<Book> getPopularBooks();
+    List<Book> getTopPopularBooks(int limit);
 }

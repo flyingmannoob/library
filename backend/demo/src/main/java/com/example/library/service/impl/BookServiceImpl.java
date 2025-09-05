@@ -51,4 +51,30 @@ public class BookServiceImpl implements BookService {
     public long countAllBooks() {
         return bookRepository.count();
     }
+    // 新增：点赞方法
+    @Override
+    public boolean likeBook(Long id) {
+        int updated = bookRepository.incrementLikes(id);
+        return updated > 0;
+    }
+
+    // 新增：取消点赞方法
+    @Override
+    public boolean unlikeBook(Long id) {
+        int updated = bookRepository.decrementLikes(id);
+        return updated > 0;
+    }
+
+    // 新增：获取所有热门图书
+    @Override
+    public List<Book> getPopularBooks() {
+        return bookRepository.findPopularBooks();
+    }
+
+    // 新增：获取指定数量的热门图书
+    @Override
+    public List<Book> getTopPopularBooks(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        return bookRepository.findTopPopularBooks(pageable);
+    }
 }
