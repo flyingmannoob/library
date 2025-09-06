@@ -20,4 +20,5 @@ public class Book {
     @TableField(value = "created_at")
     private Timestamp createdAt;
     private Double rating;
+    private Integer likes = 0; // 新增点赞数字段
 }

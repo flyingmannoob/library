@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -85,5 +86,42 @@ public class BookServiceImpl implements BookService {
             return vo;
         }).toList();
         return voList;
+    }
+    @Override
+    public Book findBookById(String id){
+        return bookMapper.selectById(Long.parseLong(id));
+    }
+    @Override
+    public List<Book> findBooksByKeyword(String keyword){
+        return bookMapper.selectList(new LambdaQueryWrapper<Book>()
+                .in(Book::getTitle, keyword).or().in(Book::getAuthor, keyword));
+    }
+
+    @Override
+    public List<Book> findBooksByCategoryId(Long categoryId){
+        return bookMapper.selectList(new LambdaQueryWrapper<Book>()
+                .eq(Book::getCategoryId, categoryId));
+    }
+
+    @Override
+    public Long countAllBooks(){
+        return bookMapper.selectCount(new LambdaQueryWrapper<>());
+    }
+
+    @Override
+    public Book saveBook(Book book){
+        bookMapper.insert(book);
+        return book;
+    }
+
+    @Override
+    public Boolean countBookById(Long id){
+        Book book = bookMapper.selectById(id);
+        return book != null;
+    }
+
+    @Override
+    public void deleteBookById(Long id){
+        bookMapper.deleteById(id);
     }
 }
