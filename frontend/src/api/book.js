@@ -1,26 +1,52 @@
 import request from '@/utils/request'
 
-// 获取书籍列表
-export function getBooks() {
+// 获取图书列表
+export function getBooks(params) {
   return request({
-    url: '/api/books', // 前端请求路径，前缀 /api 会被代理去掉
-    method: 'get'
-  }).then(res => {
-    // res 是后端返回的整个对象 { code, data, message }
-    // 直接返回 data，前端组件直接使用数组
-    return res.data
+    url: '/vue-admin-template/book/list',
+    method: 'get',
+    params
   })
 }
 
-export function recommendBooks(requestData) {
+// 获取图书详情
+export function getBook(id) {
   return request({
-    url: '/api/books/recommend',
+    url: `/vue-admin-template/book/${id}`,
+    method: 'get'
+  })
+}
+
+// 创建图书
+export function createBook(data) {
+  return request({
+    url: '/vue-admin-template/book/create',
     method: 'post',
-    data: requestData,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }).then(res => {
-    return res
+    data
+  })
+}
+
+// 更新图书
+export function updateBook(id, data) {
+  return request({
+    url: `/vue-admin-template/book/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+// 删除图书
+export function deleteBook(id) {
+  return request({
+    url: `/vue-admin-template/book/${id}`,
+    method: 'delete'
+  })
+}
+
+// 获取分类列表
+export function getCategories() {
+  return request({
+    url: '/vue-admin-template/categories',
+    method: 'get'
   })
 }

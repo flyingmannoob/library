@@ -12,6 +12,9 @@ import com.example.demo.mapper.BookMapper;
 import com.example.demo.mapper.CategoryMapper;
 import com.example.demo.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -123,5 +126,41 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBookById(Long id){
         bookMapper.deleteById(id);
+    }
+
+    @Override
+    public List<Book> searchBooks(String title, String author, Long categoryId) {
+        LambdaQueryWrapper<Book> query = new LambdaQueryWrapper<Book>();
+        if (title != null) query = query.eq(Book::getTitle, title);
+        if (author != null) query = query.eq(Book::getAuthor, author);
+        if (categoryId != null) query = query.eq(Book::getCategoryId, categoryId);
+        List<Book> books = bookMapper.selectList(query);
+        return books;
+    }
+
+    @Override
+    public Page<Book> getAllBooks(Pageable pageable) {
+        // 1. 构建MyBatis-Plus分页对象
+        com.baomidou.mybatisplus.extension.plugins.pagination.Page<Book> mpPage =
+                new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(
+                        pageable.getPageNumber() + 1,
+                        pageable.getPageSize()
+                );
+
+        // 2. 执行查询
+        com.baomidou.mybatisplus.extension.plugins.pagination.Page<Book> mpResult =
+                bookMapper.selectPage(mpPage, new LambdaQueryWrapper<Book>());
+
+        // 3. 转换为Spring Data的Page
+        List<Book> content = mpResult.getRecords();
+        long total = mpResult.getTotal();
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public Book updateBook(Long id, Book book){
+        book.setId(id);
+        bookMapper.updateById(book);
+        return book;
     }
 }

@@ -4,6 +4,8 @@ import com.example.demo.dto.vo.BooksListVO;
 import com.example.demo.dto.vo.BooksStatsVO;
 import com.example.demo.dto.vo.CategoryStatsVO;
 import com.example.demo.entity.Book;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +21,9 @@ public interface BookService {
     Book saveBook(Book book);
     Boolean countBookById(Long id);
     void deleteBookById(Long id);
+    List<Book> searchBooks(String title, String author, Long categoryId);
+
+    Page<Book> getAllBooks(Pageable pageable);
+
+    Book updateBook(Long id, Book book);
 }
